@@ -3,6 +3,7 @@ package com.ps;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+
 public class Main {
     static Scanner scanner = new Scanner(System.in);
     static ArrayList<Transaction> inventory = new ArrayList<>();
