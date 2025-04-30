@@ -1,7 +1,10 @@
 package com.ps;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.io.FileNotFoundException;
 
 
 public class Main {
@@ -136,6 +139,23 @@ public class Main {
     }
 
     private static void displayAllEntries() {
+        try {
+            BufferedReader bufferedreader = new BufferedReader(new FileReader("transactions.csv"));
+
+            String input;
+
+            while ((input = BufferedReader.readerLine()) != null) {
+                String[] fields = input.split("\\|");
+
+                String date = fields[0];
+                String time = fields[1];
+                String description = fields[2];
+                String vendor = fields[3];
+                double amount = Double.parseDouble(fields[4]);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static void makePayment() {
