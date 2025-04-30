@@ -140,11 +140,11 @@ public class Main {
 
     private static void displayAllEntries() {
         try {
-            BufferedReader bufferedreader = new BufferedReader(new FileReader("transactions.csv"));
+            BufferedReader bufferedReader = new BufferedReader(new FileReader("transactions.csv"));
 
             String input;
 
-            while ((input = BufferedReader.readerLine()) != null) {
+            while ((input = bufferedReader.readLine()) != null) {
                 String[] fields = input.split("\\|");
 
                 String date = fields[0];
