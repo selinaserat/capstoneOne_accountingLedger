@@ -2,22 +2,24 @@ package com.ps;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.io.FileNotFoundException;
 
 
 public class Main {
     static Scanner scanner = new Scanner(System.in);
-    static ArrayList<Transaction> inventory = new ArrayList<>();
+    static ArrayList<Transaction> transactions = new ArrayList<>();
+    static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
 
     public static void main(String[] args) {
-        loadTransactions();
 
         int mainMenuCommand;
 
         do {
-            System.out.println("Welcome to the Accounting Ledger");
+            System.out.println("WELCOME TO THE BAGEL BYTES BANK");
             System.out.println("1) Add deposit");
             System.out.println("2) Make payment (debit)");
             System.out.println("3) Display the ledger screen");
@@ -45,8 +47,6 @@ public class Main {
         } while (mainMenuCommand != 0);
     }
 
-    private static void loadTransactions() {
-    }
 
     private static void displayLedger() {
         System.out.println("---Display Ledger---");
@@ -116,26 +116,258 @@ public class Main {
     }
 
     private static void yearToDate() {
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader("transactions.csv"));
+            String input;
+
+
+
+            while ((input = bufferedReader.readLine()) != null) {
+                String[] fields = input.split("\\|");
+
+                String date = fields[0];
+                String time = fields[1];
+                String description = fields[2];
+                String vendor = fields[3];
+                double amount = Double.parseDouble(fields[4]);
+
+                Transaction transaction = new Transaction(date, time, description, vendor, amount);
+                transactions.add(transaction);
+            }
+            bufferedReader.close();
+
+            LocalDate today = LocalDate.now();
+            int currentYear = today.getYear();
+
+            for (Transaction transaction : transactions) {
+                LocalDate localDate = LocalDate.parse(transaction.getDate(), formatter);
+                if (localDate.getYear() == currentYear) {
+                    System.out.println(transaction);
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
+
     private static void previousYear() {
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader("transactions.csv"));
+            String input;
+
+            transactions.clear(); // optional but avoids duplicate loading
+
+            while ((input = bufferedReader.readLine()) != null) {
+                String[] fields = input.split("\\|");
+
+                String date = fields[0];
+                String time = fields[1];
+                String description = fields[2];
+                String vendor = fields[3];
+                double amount = Double.parseDouble(fields[4]);
+
+                Transaction transaction = new Transaction(date, time, description, vendor, amount);
+                transactions.add(transaction);
+            }
+            bufferedReader.close();
+
+            LocalDate previousYearDate = LocalDate.now().minusYears(1);
+            int previousYear = previousYearDate.getYear();
+
+
+            for (Transaction transaction : transactions) {
+                LocalDate localDate = LocalDate.parse(transaction.getDate(), formatter);
+                if (localDate.getYear() == previousYear) {
+                    System.out.println(transaction);
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static void searchByVendor() {
+        scanner.nextLine();
+        System.out.print("Please enter the vendor: ");
+        String userVendorChoice = scanner.nextLine();
+
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader("transactions.csv"));
+            String input;
+
+
+            while ((input = bufferedReader.readLine()) != null) {
+                String[] fields = input.split("\\|");
+
+                String date = fields[0];
+                String time = fields[1];
+                String description = fields[2];
+                String vendor = fields[3];
+                double amount = Double.parseDouble(fields[4]);
+
+                Transaction transaction = new Transaction(date, time, description, vendor, amount);
+                transactions.add(transaction);
+            }
+
+            bufferedReader.close();
+
+            boolean found = false;
+            for (Transaction transaction : transactions) {
+                if (userVendorChoice.equalsIgnoreCase(transaction.getVendor())) {
+                    System.out.println(transaction);
+                    found = true;
+                }
+            }
+
+            if (!found) {
+                System.out.println("No transactions found for vendor: " + userVendorChoice);
+            }
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
+
+
     private static void previousMonth() {
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader("transactions.csv"));
+            String input;
+
+
+            while ((input = bufferedReader.readLine()) != null) {
+                String[] fields = input.split("\\|");
+
+                String date = fields[0];
+                String time = fields[1];
+                String description = fields[2];
+                String vendor = fields[3];
+                double amount = Double.parseDouble(fields[4]);
+
+                Transaction transaction = new Transaction(date, time, description, vendor, amount);
+                transactions.add(transaction);
+            }
+            bufferedReader.close();
+
+            LocalDate today = LocalDate.now();
+            LocalDate previousMonthDate = today.minusMonths(1);
+            int previousMonth = previousMonthDate.getMonthValue();
+            int currentYear = today.getYear();
+
+
+            for (Transaction transaction : transactions) {
+                LocalDate localDate = LocalDate.parse(transaction.getDate(), formatter);
+                if (localDate.getYear() == currentYear && localDate.getMonthValue() == previousMonth) {
+                    System.out.println(transaction);
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
     private static void monthToDate() {
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader("transactions.csv"));
+            String input;
+
+            transactions.clear(); // optional but avoids duplicate loading
+
+            while ((input = bufferedReader.readLine()) != null) {
+                String[] fields = input.split("\\|");
+
+                String date = fields[0];
+                String time = fields[1];
+                String description = fields[2];
+                String vendor = fields[3];
+                double amount = Double.parseDouble(fields[4]);
+
+                Transaction transaction = new Transaction(date, time, description, vendor, amount);
+                transactions.add(transaction);
+            }
+            bufferedReader.close();
+
+            LocalDate today = LocalDate.now();
+            int currentYear = today.getYear();
+            int currentMonth = today.getMonthValue();
+
+            for (Transaction transaction : transactions) {
+                LocalDate localDate = LocalDate.parse(transaction.getDate(), formatter);
+                if (localDate.getYear() == currentYear && localDate.getMonthValue() == currentMonth) {
+                    System.out.println(transaction);
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
     private static void displayPayments() {
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader("transactions.csv"));
+
+            String input;
+
+            while ((input = bufferedReader.readLine()) != null) {
+                String[] fields = input.split("\\|");
+
+                String date = fields[0];
+                String time = fields[1];
+                String description = fields[2];
+                String vendor = fields[3];
+                double amount = Double.parseDouble(fields[4]);
+
+                Transaction transaction = new Transaction(date, time, description, vendor, amount);
+                transactions.add(transaction);
+
+            }
+
+            for(Transaction transaction : transactions ){
+                if(transaction.getAmount() < 0){
+                    System.out.println(transaction);
+                }
+            }
+            bufferedReader.close();
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static void displayDeposits() {
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader("transactions.csv"));
+
+            String input;
+
+            while ((input = bufferedReader.readLine()) != null) {
+                String[] fields = input.split("\\|");
+
+                String date = fields[0];
+                String time = fields[1];
+                String description = fields[2];
+                String vendor = fields[3];
+                double amount = Double.parseDouble(fields[4]);
+
+                Transaction transaction = new Transaction(date, time, description, vendor, amount);
+                transactions.add(transaction);
+
+            }
+
+            for(Transaction transaction : transactions ){
+                if(transaction.getAmount() > 0){
+                    System.out.println(transaction);
+                }
+            }
+            bufferedReader.close();
+
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static void displayAllEntries() {
@@ -152,7 +384,17 @@ public class Main {
                 String description = fields[2];
                 String vendor = fields[3];
                 double amount = Double.parseDouble(fields[4]);
+
+                Transaction transaction = new Transaction(date, time, description, vendor, amount);
+                transactions.add(transaction);
+
             }
+
+            for(Transaction transaction : transactions){
+                System.out.println(transaction);
+            }
+            bufferedReader.close();
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
