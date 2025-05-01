@@ -1,4 +1,11 @@
 # BAGEL BYTES BANK
 
-### Interesting Code
+### Screenshots of screens
+
+## Interesting Code
+
+
+## Author
+
+- [@selinaserat](https://www.github.com/selinaserat)
 

@@ -154,7 +154,7 @@ public class Main {
                 searchByVendor();
                 break;
             case 0:
-                System.out.println("\nGoing back");
+                displayLedger();
                 break;
             default:
                 System.out.println("\nIncorrect command, going back");
@@ -173,6 +173,7 @@ public class Main {
                 System.out.println(transaction);
             }
         }
+        displayReports();
     }
 
 
@@ -188,6 +189,7 @@ public class Main {
                 System.out.println(transaction);
             }
         }
+        displayReports();
     }
 
 
@@ -226,9 +228,10 @@ public class Main {
             }
 
             if (!found) {
-                System.out.println("\nNo transactions found for vendor: " + userVendorChoice);
+                System.out.println("\nNo transactions found for vendor: " + userVendorChoice + ". Try again");
             }
 
+            displayReports();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -267,6 +270,7 @@ public class Main {
                     System.out.println(transaction);
                 }
             }
+            displayReports();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -286,6 +290,7 @@ public class Main {
                 System.out.println(transaction);
             }
         }
+        displayReports();
     }
 
 
@@ -297,6 +302,7 @@ public class Main {
                 System.out.println(transaction);
             }
         }
+        displayLedger();
     }
 
 
@@ -308,6 +314,7 @@ public class Main {
                 System.out.println(transaction);
             }
         }
+        displayLedger();
     }
 
 
@@ -317,6 +324,7 @@ public class Main {
         for (Transaction transaction : transactions) {
             System.out.println(transaction);
         }
+        displayLedger();
     }
 
     private static void makePayment() {
