@@ -7,11 +7,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import static com.ps.Ansi.BG_PURPLE;
+
 
 public class Main {
     static Scanner scanner = new Scanner(System.in);
     static ArrayList<Transaction> transactions = new ArrayList<>();
-    static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd, HH:mm:ss");
+    static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     static DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
 
@@ -21,13 +23,23 @@ public class Main {
         int mainMenuCommand;
 
         do {
-            System.out.println("WELCOME TO THE BAGEL BYTES BANK");
-            System.out.println("1) Add deposit");
+
+            System.out.println("\n" + BG_PURPLE + Ansi.BLACK + Ansi.BOLD +
+                    "****************************************" + Ansi.RESET + "\n" + BG_PURPLE + Ansi.BLACK + Ansi.BOLD +
+                    "*                                      *" + Ansi.RESET + "\n" + BG_PURPLE + Ansi.BLACK + Ansi.BOLD +
+                    "*   WELCOME TO THE BAGEL BYTES BANK    *" + Ansi.RESET + "\n" + BG_PURPLE + Ansi.BLACK + Ansi.BOLD +
+                    "*                                      *" + Ansi.RESET + "\n" + BG_PURPLE + Ansi.BLACK + Ansi.BOLD +
+                    "****************************************"
+                    + Ansi.RESET);
+
+            System.out.println("\nPlease choose one of the options below");
+            System.out.println(Ansi.ANSI_BRIGHT_MAGENTA + "\n1) Add deposit");
             System.out.println("2) Make payment");
             System.out.println("3) Display the ledger screen");
-            System.out.println("0) Exit");
-            System.out.print("What would you like to do? ");
+            System.out.println("0) Exit" + Ansi.ANSI_RESET + "\n");
+            System.out.print(Ansi.ANSI_ITALIC + "What would you like to do?" + Ansi.RESET + " ");
             mainMenuCommand = scanner.nextInt();
+
 
             switch (mainMenuCommand) {
                 case 1:
@@ -83,13 +95,13 @@ public class Main {
 
 
     private static void displayLedger() {
-        System.out.println("---Display Ledger---");
-        System.out.println("1) All entries");
+        System.out.println("\n" + Ansi.BG_BLUE + Ansi.BLACK + Ansi.BOLD + "---Display Ledger---" + Ansi.RESET + "\n");
+        System.out.println(Ansi.BLUE + "1) All entries");
         System.out.println("2) Deposits");
         System.out.println("3) Payments");
         System.out.println("4) Reports");
         System.out.println("0) Home");
-        System.out.print("What would you like to do? ");
+        System.out.print(Ansi.RESET + Ansi.ANSI_ITALIC + "\nWhat would you like to display? ");
         int displayLedgerCommand = scanner.nextInt();
 
         switch (displayLedgerCommand) {
@@ -106,22 +118,22 @@ public class Main {
                 displayReports();
                 break;
             case 0:
-                System.out.println("Going to home screen");
+                System.out.println("\n\uD83C\uDFE0 Going to home screen \uD83C\uDFE0");
                 break;
             default:
-                System.out.println("Incorrect command, going back");
+                System.out.println("\nIncorrect command, going back");
         }
     }
 
     private static void displayReports() {
-        System.out.println("---Display Reports---");
-        System.out.println("1) Month to Date");
+        System.out.println("\n" + Ansi.BG_CYAN + Ansi.BLACK + Ansi.BOLD + "---Display Reports---" + Ansi.RESET + "\n");
+        System.out.println(Ansi.CYAN + "1) Month to Date");
         System.out.println("2) Previous Month");
         System.out.println("3) Year to Date");
         System.out.println("4) Previous Year");
         System.out.println("5) Search by Vendor");
         System.out.println("0) Back");
-        System.out.print("What would you like to do? ");
+        System.out.print(Ansi.RESET + Ansi.ANSI_ITALIC + "\nHow would you like to display the reports? ");
 
         int displayCartCommand = scanner.nextInt();
 
@@ -142,10 +154,10 @@ public class Main {
                 searchByVendor();
                 break;
             case 0:
-                System.out.println("Going back");
+                System.out.println("\nGoing back");
                 break;
             default:
-                System.out.println("Incorrect command, going back");
+                System.out.println("\nIncorrect command, going back");
         }
     }
 
@@ -154,6 +166,7 @@ public class Main {
         LocalDate today = LocalDate.now();
         int currentYear = today.getYear();
 
+        System.out.println();
         for (Transaction transaction : transactions) {
             LocalDate localDate = LocalDate.parse(transaction.getDate(), dateFormatter);
             if (localDate.getYear() == currentYear) {
@@ -180,8 +193,9 @@ public class Main {
 
     private static void searchByVendor() {
         scanner.nextLine();
-        System.out.print("Please enter the vendor: ");
+        System.out.print("\nPlease enter the vendor name: ");
         String userVendorChoice = scanner.nextLine();
+        System.out.println();
 
         try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader("transactions.csv"));
@@ -212,7 +226,7 @@ public class Main {
             }
 
             if (!found) {
-                System.out.println("No transactions found for vendor: " + userVendorChoice);
+                System.out.println("\nNo transactions found for vendor: " + userVendorChoice);
             }
 
         } catch (Exception e) {
@@ -312,7 +326,7 @@ public class Main {
 
             String[] userPayment = new String[5];
 
-            System.out.print("Enter the date of the payment (yyyy-MM-dd): ");
+            System.out.print("\nEnter the date of the payment (yyyy-MM-dd): ");
             userPayment[0] = scanner.nextLine();
 
             System.out.print("Enter the time of the payment (HH:mm:ss): ");
@@ -340,7 +354,7 @@ public class Main {
             bufferedWriter.newLine();
             bufferedWriter.close();
 
-            System.out.println("You have added this payment: " + userPaymentFormatted);
+            System.out.println("\nYou have added this payment: " + userPaymentFormatted + "\n");
 
         } catch (IOException e) {
             throw new RuntimeException("File error: " + e.getMessage());
@@ -355,7 +369,8 @@ public class Main {
 
             String[] userDeposit = new String[5];
 
-            System.out.print("Enter the date of the deposit (yyyy-MM-dd): ");
+            System.out.println("ADDING DEPOSIT");
+            System.out.print("\nEnter the date of the deposit (yyyy-MM-dd): ");
             userDeposit[0] = scanner.nextLine();
 
             System.out.print("Enter the time of the deposit (HH:mm:ss): ");
@@ -383,7 +398,7 @@ public class Main {
             bufferedWriter.newLine();
             bufferedWriter.close();
 
-            System.out.println("You have added this payment: " + userDepositFormatted);
+            System.out.println("\nYou have added this payment: " + userDepositFormatted + "\n");
 
         } catch (IOException e) {
             throw new RuntimeException("File error: " + e.getMessage());
