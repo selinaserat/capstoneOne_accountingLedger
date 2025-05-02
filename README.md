@@ -5,7 +5,6 @@ ____________________________
 
 ## Screenshots of the Screens
 
-----------------------------------
 ### Main Menu
 ![Screenshot 2025-05-01 155111.png](Screenshot%202025-05-01%20155111.png)
 
