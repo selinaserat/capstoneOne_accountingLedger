@@ -7,14 +7,12 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import static com.ps.Ansi.BG_PURPLE;
 
 
 public class Main {
     static Scanner scanner = new Scanner(System.in);
     static ArrayList<Transaction> transactions = new ArrayList<>();
     static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    static DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
 
     public static void main(String[] args) {
@@ -24,11 +22,11 @@ public class Main {
 
         do {
 
-            System.out.println("\n" + BG_PURPLE + Ansi.BLACK + Ansi.BOLD +
-                    "****************************************" + Ansi.RESET + "\n" + BG_PURPLE + Ansi.BLACK + Ansi.BOLD +
-                    "*                                      *" + Ansi.RESET + "\n" + BG_PURPLE + Ansi.BLACK + Ansi.BOLD +
-                    "*   WELCOME TO THE BAGEL BYTES BANK    *" + Ansi.RESET + "\n" + BG_PURPLE + Ansi.BLACK + Ansi.BOLD +
-                    "*                                      *" + Ansi.RESET + "\n" + BG_PURPLE + Ansi.BLACK + Ansi.BOLD +
+            System.out.println("\n" + Ansi.BG_PURPLE + Ansi.BLACK + Ansi.BOLD +
+                    "****************************************" + Ansi.RESET + "\n" + Ansi.BG_PURPLE + Ansi.BLACK + Ansi.BOLD +
+                    "*                                      *" + Ansi.RESET + "\n" + Ansi.BG_PURPLE + Ansi.BLACK + Ansi.BOLD +
+                    "*   WELCOME TO THE BAGEL BYTES BANK    *" + Ansi.RESET + "\n" + Ansi.BG_PURPLE + Ansi.BLACK + Ansi.BOLD +
+                    "*                                      *" + Ansi.RESET + "\n" + Ansi.BG_PURPLE + Ansi.BLACK + Ansi.BOLD +
                     "****************************************"
                     + Ansi.RESET);
 
@@ -166,7 +164,8 @@ public class Main {
         LocalDate today = LocalDate.now();
         int currentYear = today.getYear();
 
-        System.out.println();
+
+        System.out.println("\nYEAR TO DATE TRANSACTIONS\n");
         for (Transaction transaction : transactions) {
             LocalDate localDate = LocalDate.parse(transaction.getDate(), dateFormatter);
             if (localDate.getYear() == currentYear) {
@@ -182,6 +181,7 @@ public class Main {
         LocalDate previousYearDate = LocalDate.now().minusYears(1);
         int previousYear = previousYearDate.getYear();
 
+        System.out.println("\nPREVIOUS YEAR TRANSACTIONS\n");
 
         for (Transaction transaction : transactions) {
             LocalDate localDate = LocalDate.parse(transaction.getDate(), dateFormatter);
@@ -197,27 +197,8 @@ public class Main {
         scanner.nextLine();
         System.out.print("\nPlease enter the vendor name: ");
         String userVendorChoice = scanner.nextLine();
-        System.out.println();
+        System.out.println("\nVENDOR TRANSACTIONS\n");
 
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader("transactions.csv"));
-            String input;
-
-
-            while ((input = bufferedReader.readLine()) != null) {
-                String[] fields = input.split("\\|");
-
-                String date = fields[0];
-                String time = fields[1];
-                String description = fields[2];
-                String vendor = fields[3];
-                double amount = Double.parseDouble(fields[4]);
-
-                Transaction transaction = new Transaction(date, time, description, vendor, amount);
-                transactions.add(transaction);
-            }
-
-            bufferedReader.close();
 
             boolean found = false;
             for (Transaction transaction : transactions) {
@@ -232,32 +213,13 @@ public class Main {
             }
 
             displayReports();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
 
     private static void previousMonth() {
-        try {
-            BufferedReader bufferedReader = new BufferedReader(new FileReader("transactions.csv"));
-            String input;
 
 
-            while ((input = bufferedReader.readLine()) != null) {
-                String[] fields = input.split("\\|");
-
-                String date = fields[0];
-                String time = fields[1];
-                String description = fields[2];
-                String vendor = fields[3];
-                double amount = Double.parseDouble(fields[4]);
-
-                Transaction transaction = new Transaction(date, time, description, vendor, amount);
-                transactions.add(transaction);
-            }
-            bufferedReader.close();
-
+        System.out.println("\nPREVIOUS MONTH TRANSACTIONS\n");
             LocalDate today = LocalDate.now();
             LocalDate previousMonthDate = today.minusMonths(1);
             int previousMonth = previousMonthDate.getMonthValue();
@@ -271,15 +233,14 @@ public class Main {
                 }
             }
             displayReports();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+
     }
 
 
     private static void monthToDate() {
 
 
+        System.out.println("\nMONTH TO DATE TRANSACTIONS\n");
         LocalDate today = LocalDate.now();
         int currentYear = today.getYear();
         int currentMonth = today.getMonthValue();
@@ -296,6 +257,7 @@ public class Main {
 
     private static void displayPayments() {
 
+        System.out.println("\nPAYMENT TRANSACTIONS\n");
 
         for (Transaction transaction : transactions) {
             if (transaction.getAmount() < 0) {
@@ -308,6 +270,7 @@ public class Main {
 
     private static void displayDeposits() {
 
+        System.out.println("\nDEPOSIT TRANSACTIONS\n");
 
         for (Transaction transaction : transactions) {
             if (transaction.getAmount() > 0) {
@@ -320,6 +283,7 @@ public class Main {
 
     private static void displayAllEntries() {
 
+        System.out.println("\nALL TRANSACTIONS\n");
 
         for (Transaction transaction : transactions) {
             System.out.println(transaction);
@@ -334,20 +298,21 @@ public class Main {
 
             String[] userPayment = new String[5];
 
+            System.out.println("\nADDING PAYMENT");
             System.out.print("\nEnter the date of the payment (yyyy-MM-dd): ");
-            userPayment[0] = scanner.nextLine();
+            userPayment[0] = scanner.nextLine().trim();
 
             System.out.print("Enter the time of the payment (HH:mm:ss): ");
-            userPayment[1] = scanner.nextLine();
+            userPayment[1] = scanner.nextLine().trim();
 
             System.out.print("Enter the description of the payment: ");
-            userPayment[2] = scanner.nextLine();
+            userPayment[2] = scanner.nextLine().trim();
 
             System.out.print("Enter the name of the vendor you paid: ");
-            userPayment[3] = scanner.nextLine();
+            userPayment[3] = scanner.nextLine().trim();
 
             System.out.print("Enter the amount of the payment: ");
-            userPayment[4] = scanner.nextLine();
+            userPayment[4] = scanner.nextLine().trim();
 
 
             LocalDate userPaymentDate = LocalDate.parse(userPayment[0]);
@@ -377,21 +342,21 @@ public class Main {
 
             String[] userDeposit = new String[5];
 
-            System.out.println("ADDING DEPOSIT");
+            System.out.println("\nADDING DEPOSIT");
             System.out.print("\nEnter the date of the deposit (yyyy-MM-dd): ");
-            userDeposit[0] = scanner.nextLine();
+            userDeposit[0] = scanner.nextLine().trim();
 
             System.out.print("Enter the time of the deposit (HH:mm:ss): ");
-            userDeposit[1] = scanner.nextLine();
+            userDeposit[1] = scanner.nextLine().trim();
 
             System.out.print("Enter the description of the deposit: ");
-            userDeposit[2] = scanner.nextLine();
+            userDeposit[2] = scanner.nextLine().trim();
 
             System.out.print("Enter the name of the vendor that paid you: ");
-            userDeposit[3] = scanner.nextLine();
+            userDeposit[3] = scanner.nextLine().trim();
 
             System.out.print("Enter the amount of the deposit: ");
-            userDeposit[4] = scanner.nextLine();
+            userDeposit[4] = scanner.nextLine().trim();
 
 
             LocalDate userDepositDate = LocalDate.parse(userDeposit[0]);
